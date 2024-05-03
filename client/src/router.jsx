@@ -1,31 +1,22 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
+import Applayout from "./pages/Applayout";
 import About from "./pages/About";
-import SignUp from "./pages/SignUp";
-import SignIn from "./pages/SignIn";
+import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import SignIn from "./pages/SignIn";
+import SignOut from "./pages/SignOut";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/about",
-        element: <About />,
-    },
-    {
-        path: "/sign-up",
-        element: <SignUp />,
-    },
-    {
-        path: "/sign-in",
-        element: <SignIn />,
-    },
-    {
-        path: "/profile",
-        element: <Profile />,
+        element: <Applayout />,
+        children: [
+            { path: "/", element: <Home /> },
+            { path: "/about", element: <About /> },
+            { path: "/profile", element: <Profile /> },
+            { path: "/signin", element: <SignIn /> },
+            { path: "/signout", element: <SignOut /> },
+        ],
     },
 ]);
 
