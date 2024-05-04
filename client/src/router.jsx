@@ -9,6 +9,7 @@ import SignOut from "./pages/SignOut";
 
 const router = createBrowserRouter([
     {
+        // from here header and outlet will be rendered in the browser
         element: <Applayout />,
         children: [
             { path: "/", element: <Home /> },
