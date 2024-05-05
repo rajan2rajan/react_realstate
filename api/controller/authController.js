@@ -24,7 +24,7 @@ const authController = {
             await user.save();
             res.json({ message: "signup sucessfull" });
         } catch (error) {
-            next(customeError("Error while creating user", 500));
+            next(error.message);
         }
     },
 };

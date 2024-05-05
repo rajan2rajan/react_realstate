@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
 import ErrorHander from "./middleware/errorHandler.js";
+import cors from "cors";
 
 const app = express();
 
@@ -12,6 +13,9 @@ dotenv.config();
 
 // Connect to database
 connect();
+
+// Enable CORS so that the client can make requests to the server( otherwise request cannot be made to the server)
+app.use(cors());
 
 // is used to parse incoming request bodies in JSON format otherwise req.body will be undefined
 app.use(express.json());
