@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
-    const [formData, setFormData] = useState("");
+    const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -18,24 +18,18 @@ function SignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            setError(null);
             setLoading(true);
+            setError(null);
+            console.log(formData);
+
             await axios.post("/api/auth/signup", formData);
             setLoading(false);
-            navigate("/signup");
-        } catch (err) {
-            // console.log(err.response.data.message);
-            setError(err.response.data.message);
-            if (err.response.data.statusCode === 500) {
-                setError("Internal server error");
-                setLoading(false);
-                return;
-            }
-            if (err.response.data.sucess == false) {
-                setError(response.message);
-                return;
-            }
+            setError(null);
+            navigate("/signin");
+        } catch (error) {
+            console.log("here is running");
             setLoading(false);
+            setError(error.response.data.message);
         }
     };
 
