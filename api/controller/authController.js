@@ -58,6 +58,49 @@ const authController = {
             next(error.message);
         }
     },
+
+    // this is for google oauth
+    googleOAuth: async (req, res, next) => {
+        try {
+            const { name, email, photo } = req.body;
+            const user = await User.findOne({ email });
+            if (user) {
+                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+                    expiresIn: "1d",
+                });
+                console.log(token);
+                //remove password from list
+                const { password: pass, ...withoutPassword } = user._doc;
+                res.cookie("access_token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+                    .status(200)
+                    .json(withoutPassword);
+            } else {
+                //
+
+                // problem is occuring here
+                const generatePassword = Math.random().toString(36).slice(-8);
+                const hashedPassword = await bcrypt.hash(generatePassword, 10);
+                const username =
+                    name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-5);
+                const newUser = new User({
+                    username,
+                    email,
+                    password: hashedPassword,
+                    photo,
+                });
+                await newUser.save();
+                const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+                    expiresIn: "1d",
+                });
+                const { password: pass, ...withoutPassword } = newUser._doc;
+                res.cookie("access_token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+                    .status(200)
+                    .json(withoutPassword);
+            }
+        } catch (error) {
+            next(error.message);
+        }
+    },
 };
 
 export default authController;

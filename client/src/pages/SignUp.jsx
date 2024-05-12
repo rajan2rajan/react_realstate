@@ -4,12 +4,16 @@ import InputComponent from "../components/InputComponent";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
+import { useDispatch } from "react-redux";
+import { signInStart } from "../redux/user/userSlice";
 
 function SignUp() {
     const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -18,15 +22,21 @@ function SignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            setLoading(true);
+            // fetch start
+            dispatch(signInStart());
+            // setLoading(true);
             setError(null);
             console.log(formData);
 
-            await axios.post("/api/auth/signup", formData);
+            const data = await axios.post("/api/auth/signup", formData);
+            if (data.status === 200) {
+                // dispatch success action
+            }
             setLoading(false);
             setError(null);
             navigate("/signin");
         } catch (error) {
+            // dispatch fail action
             console.log("here is running");
             setLoading(false);
             setError(error.response.data.message);
@@ -60,6 +70,8 @@ function SignUp() {
                     >
                         {loading ? "Loading..." : "Sign In"}
                     </button>
+
+                    <OAuth />
                 </form>
                 <div className="flex gap-2 mt-5">
                     <p> Have an account?</p>

@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
+        photo: {
+            type: String,
+            default:
+                "https://blogs.upm.es/in4soc/wp-content/uploads/sites/586/2021/11/CHOXLj9b_400x400-1.jpg",
+        },
     },
     {
         timestamps: true,

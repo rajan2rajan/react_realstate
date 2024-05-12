@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 function SignIn() {
     const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    // const { loading, error } = useSelector((state) => state.user);
 
+    // const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -26,12 +29,13 @@ function SignIn() {
         } catch (error) {
             console.log(error.response.data.success);
             if (error.response.data.success === false) {
+                // dispatch(signInFail(error.response.data.message));
                 setError(error.response.data.message);
                 setLoading(false);
+
                 return;
             }
-            setError(error.response.data.message);
-            setLoading(false);
+            dispatch(signInFail(error.response.data.message));
             return;
         }
     };
@@ -62,6 +66,8 @@ function SignIn() {
                     >
                         {loading ? "loading..." : "Login"}
                     </button>
+
+                    <OAuth />
                 </form>
                 <div className="flex gap-2 mt-5">
                     <p>Dont have an account?</p>
