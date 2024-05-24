@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import connect from "./config/connect.js";
 import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
@@ -19,6 +20,9 @@ app.use(cors());
 
 // is used to parse incoming request bodies in JSON format otherwise req.body will be undefined
 app.use(express.json());
+
+// is used to parse incoming request cookies
+app.use(cookieParser());
 
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);

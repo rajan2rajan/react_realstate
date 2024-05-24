@@ -9,6 +9,9 @@ import SignUp from "./pages/SignUp";
 import SignOut from "./pages/SignOut";
 
 const router = createBrowserRouter([
+    // this are for login page and signup page
+    { path: "/signin", element: <SignIn /> },
+    { path: "/signup", element: <SignUp /> },
     {
         // from here header and outlet will be rendered in the browser
         element: <Applayout />,
@@ -16,9 +19,7 @@ const router = createBrowserRouter([
             { path: "/", element: <Home /> },
             { path: "/about", element: <About /> },
             { path: "/profile", element: <Profile /> },
-            { path: "/signin", element: <SignIn /> },
             { path: "/signout", element: <SignOut /> },
-            { path: "/signup", element: <SignUp /> },
         ],
     },
 ]);

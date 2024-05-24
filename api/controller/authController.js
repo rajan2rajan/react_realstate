@@ -24,7 +24,7 @@ const authController = {
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = new User({ username, email, password: hashedPassword });
             await user.save();
-            res.json({ message: "signup sucessfull" });
+            res.status(200).json({ message: "User created successfully" });
         } catch (error) {
             next(error.message);
         }
@@ -51,7 +51,10 @@ const authController = {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
             // remove password form
             const { password: pass, ...withoutPassword } = user._doc;
-            res.cookie("access_token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+            res.cookie("token", token, {
+                httpOnly: true,
+                expires: new Date(Date.now() + 25892000000),
+            })
                 .status(200)
                 .json(withoutPassword);
         } catch (error) {
@@ -68,35 +71,44 @@ const authController = {
                 const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
                     expiresIn: "1d",
                 });
-                console.log(token);
                 //remove password from list
                 const { password: pass, ...withoutPassword } = user._doc;
-                res.cookie("access_token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+                res.cookie("access_token", token, {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + 25892000000),
+                })
                     .status(200)
                     .json(withoutPassword);
             } else {
-                //
-
-                // problem is occuring here
                 const generatePassword = Math.random().toString(36).slice(-8);
                 const hashedPassword = await bcrypt.hash(generatePassword, 10);
                 const username =
                     name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-5);
                 const newUser = new User({
-                    username,
-                    email,
+                    username: username,
+                    email: email,
                     password: hashedPassword,
-                    photo,
+                    photo: photo,
                 });
                 await newUser.save();
-                const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-                    expiresIn: "1d",
-                });
+                const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
                 const { password: pass, ...withoutPassword } = newUser._doc;
-                res.cookie("access_token", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + 25892000000),
+                })
                     .status(200)
                     .json(withoutPassword);
             }
+        } catch (error) {
+            next(error.message);
+        }
+    },
+
+    // this is for logout an user
+    signOut: async (req, res, next) => {
+        try {
+            res.clearCookie("token").status(200).json({ message: "Sign out successfully" });
         } catch (error) {
             next(error.message);
         }
